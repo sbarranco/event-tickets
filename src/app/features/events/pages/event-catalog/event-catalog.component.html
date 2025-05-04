@@ -1,0 +1,27 @@
+<div class="event-catalog">
+    <div class="event-grid" *ngIf="events$ | async as events">
+        <div class="event-card" *ngFor="let event of events">
+            <a [routerLink]="['/events', event.id]" class="event-image">
+                <img src="/assets/img/sample-image.jpg" alt="Event Image" />
+            </a>
+            <div class="event-info">
+                <a [routerLink]="['/events', event.id]" class="event-title">
+                    {{ event.title }}
+                </a>
+                <a [routerLink]="['/events', event.id]" class="event-subtitle">
+                    {{ event.subtitle }}
+                </a>
+                <p class="event-place">{{ event.place }}</p>
+                <p class="event-dates">
+                    {{ event.startDate | date }} - {{ event.endDate | date }}
+                </p>
+                <p class="event-description" *ngIf="isMediumOrLargeScreen">
+                    {{ event.description }}
+                </p>
+                <a [routerLink]="['/events', event.id]" class="event-action">
+                    <button>View Details</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
