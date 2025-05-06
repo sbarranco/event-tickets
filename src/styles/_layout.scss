@@ -1,0 +1,14 @@
+@use "./variables" as *;
+
+.app-layout {
+  &__content {
+    padding: 32px;
+    min-height: calc(100vh - $header-height);
+    background-color: $background-color;
+  }
+
+  &__footer {
+    margin: 4px;
+    text-align: center;
+  }
+}
