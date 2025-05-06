@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { EventsService } from '../../services/event.service';
+import { Observable } from 'rxjs';
+import { EventInfo, EventItem } from '../../models/event.model';
 
 @Component({
   selector: 'app-event-detail',
@@ -8,15 +11,19 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./event-detail.component.scss'],
   imports: [CommonModule, RouterModule],
 })
-export class EventDetailComponent {
-  events = [
-    { id: 1, name: 'Music Concert', date: '2023-11-01', location: 'New York' },
-    { id: 2, name: 'Art Exhibition', date: '2023-11-15', location: 'Paris' },
-    {
-      id: 3,
-      name: 'Tech Conference',
-      date: '2023-12-05',
-      location: 'San Francisco',
-    },
-  ];
+export class EventDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private eventsService = inject(EventsService);
+  private router = inject(Router);
+
+  event$!: Observable<EventInfo>;
+
+  ngOnInit(): void {
+    const eventId = this.route.snapshot.paramMap.get('id') || '';
+    this.event$ = this.eventsService.getEventInfo(eventId);
+  }
+
+  onBack(): void {
+    this.router.navigate(['events']);
+  }
 }

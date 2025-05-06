@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { EventsService } from '../../services/event.service';
 import { map, Observable } from 'rxjs';
-import { Event } from '../../models/event.model';
+import { EventItem } from '../../models/event.model';
 import { EventCardComponent } from '../../components/event-card/event-card.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 
@@ -21,7 +21,7 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 export class EventCatalogComponent {
   private eventsService = inject(EventsService);
   private router = inject(Router);
-  events$!: Observable<Event[]>;
+  events$!: Observable<EventItem[]>;
   isMediumOrLargeScreen: any;
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Event } from '../../models/event.model';
+import { EventItem } from '../../models/event.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -11,7 +11,7 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
   imports: [CommonModule, ButtonComponent],
 })
 export class EventCardComponent {
-  event = input.required<Event>();
+  event = input.required<EventItem>();
   clickCard = output<string>();
   isMediumOrLargeScreen: any;
 }
