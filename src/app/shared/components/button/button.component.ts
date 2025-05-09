@@ -7,7 +7,7 @@ import { Component, input } from '@angular/core';
 })
 export class ButtonComponent {
   label = input.required<string>();
-  color = input<'primary' | 'secondary'>('primary');
+  color = input<'filled' | 'ghost'>('filled');
   disabled = input<boolean>(false);
   fullWidth = input<boolean>(false);
 }

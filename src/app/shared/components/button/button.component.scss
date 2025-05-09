@@ -9,7 +9,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
 
-  &.primary {
+  &.filled {
     background-color: $primary-color;
     color: #fff;
 
@@ -18,11 +18,12 @@
     }
   }
 
-  &.secondary {
-    background-color: $secondary-color;
+  &.ghost {
+    background-color: transparent;
+    color: $primary-color;
 
     &:hover {
-      background-color: #5a6268;
+      color: rgba($primary-color, 0.1);
     }
   }
 
