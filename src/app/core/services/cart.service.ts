@@ -62,6 +62,7 @@ export class CartService {
 
     if (eventIndex !== -1) {
       const existingEvent = currentCart[eventIndex];
+
       const sessionIndex = existingEvent.sessions.findIndex(
         (session) => session.date === sessionDate
       );
@@ -74,11 +75,13 @@ export class CartService {
 
           if (session.selected === 0) {
             existingEvent.sessions.splice(sessionIndex, 1);
+
             if (existingEvent.sessions.length === 0) {
               currentCart.splice(eventIndex, 1);
             }
           }
         }
+
         this.setCartItems(currentCart);
       }
     }

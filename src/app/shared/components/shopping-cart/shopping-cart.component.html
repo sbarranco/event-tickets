@@ -1,6 +1,6 @@
 <div class="shopping-cart">
   <h2>Carrito</h2>
-  {{cartItems | json}}
+  @if ((cartItems() ?? []).length > 0) {
   @for (eventInfo of cartItems(); track eventInfo.event.id) {
   <div class="shopping-cart__event">
     <h3>{{ eventInfo.event.title }}</h3>
@@ -24,5 +24,6 @@
       }
     </ul>
   </div>
+  }
   }
 </div>
