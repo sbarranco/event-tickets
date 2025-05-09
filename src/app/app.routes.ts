@@ -16,12 +16,5 @@ export const routes: Routes = [
         './features/events/pages/event-detail/event-detail.component'
       ).then((m) => m.EventDetailComponent),
   },
-  {
-    path: 'cart',
-    loadComponent: () =>
-      import('./features/cart/pages/shopping-cart.component').then(
-        (m) => m.ShoppingCartComponent
-      ),
-  },
   { path: '**', redirectTo: 'events' },
 ];
