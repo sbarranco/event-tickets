@@ -1,64 +1,98 @@
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpService } from './http.service';
-import { StateService } from './state.service';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { EventInfo } from '../../features/events/models/event.model';
+import { SessionItem } from '../../features/events/models/session.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private cartItems = new BehaviorSubject<any[]>([]);
-  private http = inject(HttpService);
-  private stateService = inject(StateService);
+  private cartItemsSubject = new BehaviorSubject<EventInfo[]>(
+    this.loadCartFromStorage()
+  );
+  cartItems$ = this.cartItemsSubject.asObservable();
 
-  getCartItems(): Observable<any[]> {
-    return this.cartItems.asObservable();
+  getCartItems(): EventInfo[] {
+    return this.cartItemsSubject.getValue();
   }
 
-  addToCart(sessionId: string, quantity: number): void {
-    this.stateService.setLoading(true);
-    const url = `/api/cart/add`;
-    const body = { sessionId, quantity };
+  setCartItems(cartItems: EventInfo[]): void {
+    this.cartItemsSubject.next(cartItems);
+    this.saveCartToStorage();
+  }
 
-    this.http.post(url, body).subscribe({
-      next: () => {
-        const currentCart = this.cartItems.value;
-        const existingItem = currentCart.find(
-          (item) => item.sessionId === sessionId
+  addSession(eventInfo: EventInfo, session: SessionItem): void {
+    const currentCart = this.getCartItems();
+    const eventIndex = currentCart.findIndex(
+      (item) => item.event.id === eventInfo.event.id
+    );
+
+    if (eventIndex !== -1) {
+      const existingEvent = currentCart[eventIndex];
+      const sessionIndex = existingEvent.sessions.findIndex(
+        (s) => s.date === session.date
+      );
+
+      if (sessionIndex !== -1) {
+        const existingSession = existingEvent.sessions[sessionIndex];
+        existingSession.selected = Math.min(
+          existingSession.selected! + 1,
+          existingSession.availability
         );
+      } else {
+        session.selected = 1;
+        existingEvent.sessions.push(session);
+      }
+    } else {
+      session.selected = 1;
+      currentCart.push({
+        event: eventInfo.event,
+        sessions: [session],
+      });
+    }
 
-        if (existingItem) {
-          existingItem.quantity += quantity;
-        } else {
-          currentCart.push({ sessionId, quantity });
+    this.setCartItems(currentCart);
+  }
+
+  removeSession(eventId: string, sessionDate: string): void {
+    const currentCart = this.getCartItems();
+    const eventIndex = currentCart.findIndex(
+      (item) => item.event.id === eventId
+    );
+
+    if (eventIndex !== -1) {
+      const existingEvent = currentCart[eventIndex];
+      const sessionIndex = existingEvent.sessions.findIndex(
+        (session) => session.date === sessionDate
+      );
+
+      if (sessionIndex !== -1) {
+        const session = existingEvent.sessions[sessionIndex];
+
+        if (session.selected && session.selected > 0) {
+          session.selected--;
+
+          if (session.selected === 0) {
+            existingEvent.sessions.splice(sessionIndex, 1);
+            if (existingEvent.sessions.length === 0) {
+              currentCart.splice(eventIndex, 1);
+            }
+          }
         }
-
-        this.cartItems.next(currentCart);
-        this.stateService.setLoading(false); // Desactivar indicador de carga
-      },
-      error: () => {
-        this.stateService.setLoading(false); // Desactivar indicador de carga en caso de error
-      },
-    });
+        this.setCartItems(currentCart);
+      }
+    }
   }
 
-  // Eliminar una localidad del carrito
-  removeFromCart(sessionId: string): void {
-    this.stateService.setLoading(true); // Activar indicador de carga
-    const url = `/api/cart/remove`; // URL ficticia para la API
-    const body = { sessionId };
+  private loadCartFromStorage(): EventInfo[] {
+    const storedCart = localStorage.getItem('cart');
+    return storedCart ? JSON.parse(storedCart) : [];
+  }
 
-    this.http.post(url, body).subscribe({
-      next: () => {
-        const updatedCart = this.cartItems.value.filter(
-          (item) => item.sessionId !== sessionId
-        );
-        this.cartItems.next(updatedCart);
-        this.stateService.setLoading(false); // Desactivar indicador de carga
-      },
-      error: () => {
-        this.stateService.setLoading(false); // Desactivar indicador de carga en caso de error
-      },
-    });
+  private saveCartToStorage(): void {
+    localStorage.setItem(
+      'cart',
+      JSON.stringify(this.cartItemsSubject.getValue())
+    );
   }
 }
