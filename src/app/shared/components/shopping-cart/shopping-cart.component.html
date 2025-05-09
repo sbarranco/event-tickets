@@ -1,0 +1,28 @@
+<div class="shopping-cart">
+  <h2>Carrito</h2>
+  {{cartItems | json}}
+  @for (eventInfo of cartItems(); track eventInfo.event.id) {
+  <div class="shopping-cart__event">
+    <h3>{{ eventInfo.event.title }}</h3>
+    <ul>
+      @for(session of eventInfo.sessions | orderBy: 'date'; track $index) {
+      <li class="shopping-cart__session">
+        <p>{{ session.date | date: 'dd/MM/yyyy' }}</p>
+
+        <div>
+          <span>x{{ session.selected }}</span>
+          <button (click)="onRemoveSession(eventInfo.event.id, session.date)">
+            <img src="/assets/img/trash.png" alt="Remove Session" />
+          </button>
+        </div>
+
+      </li>
+      } @empty {
+      <app-empty-state>
+        No events in the cart.
+      </app-empty-state>
+      }
+    </ul>
+  </div>
+  }
+</div>
