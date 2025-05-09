@@ -81,6 +81,37 @@ src/
 
 ---
 
+## Styling Approach
+
+The application follows a structured and scalable styling approach to ensure consistency and maintainability:
+
+1. **Global Styles**:
+
+   - Global styles are defined in the `src/styles/` folder and include:
+     - `_variables.scss`: Contains reusable variables for colors, fonts, spacing, and layout dimensions.
+     - `_layout.scss`: Defines global layout styles using **BEM methodology**.
+     - `styles.scss`: Serves as the entry point for global styles, importing variables and layout styles.
+   - These styles ensure a consistent design system across the application.
+
+2. **BEM Methodology**:
+
+   - The **Block-Element-Modifier (BEM)** methodology is used to structure CSS classes, ensuring styles are modular and reusable.
+   - Example:
+     - Block: `.app-layout`
+     - Element: `.app-layout__content`
+     - Modifier: `.app-layout--dark`
+
+3. **Component/Page-Specific Styles**:
+
+   - Each component or page has its own dedicated SCSS file for styles specific to that component or page.
+   - This ensures that styles are encapsulated and do not leak into other parts of the application.
+
+4. **Scalable and Maintainable**:
+   - By separating global styles and component-specific styles, the application ensures:
+     - **Consistency**: Global variables and layout styles provide a unified design system.
+     - **Encapsulation**: Component-specific styles prevent unintended style conflicts.
+     - **Scalability**: Adding new components or pages does not impact existing styles.
+
 ## Development Server
 
 To start a local development server, run:
@@ -112,9 +143,25 @@ Once the server is running, open your browser and navigate to `http://localhost:
 
 ---
 
+## How to Extend the Styling
+
+1. **Add a New Global Variable**:
+
+   - Define the variable in `_variables.scss` for reuse across the application.
+
+2. **Add a New Component Style**:
+
+   - Create a new SCSS file for the component (e.g., `my-component.component.scss`).
+   - Use BEM methodology to structure the styles.
+
+3. **Update Global Layout**:
+   - Modify `_layout.scss` to add or update global layout styles.
+
+---
+
 ## Conclusion
 
-This project demonstrates a scalable and maintainable architecture using Angular. By adopting **Domain-Driven Design (DDD)** and **reactive programming principles**, the application is well-suited for growth and easy to maintain. Each module is self-contained, ensuring a clean separation of concerns and reducing dependencies.
+By adopting **Domain-Driven Design (DDD)** and **reactive programming principles**, the application is well-suited for growth and easy to maintain. Each module is self-contained, ensuring a clean separation of concerns and reducing dependencies.
 
 Feel free to explore the codebase and reach out if you have any questions!
 Thanks Silvia
