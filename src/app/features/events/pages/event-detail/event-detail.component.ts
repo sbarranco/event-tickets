@@ -58,6 +58,21 @@ export class EventDetailComponent implements OnInit {
   }
 
   decreaseSelection(session: SessionItem, eventInfo: EventInfo): void {
+    if (!session.selected) {
+      const cartItems = this.cartService.getCartItems();
+      const event = cartItems.find(
+        (item) => item.event.id === eventInfo.event.id
+      );
+      if (event) {
+        const foundSession = event.sessions.find(
+          (s) => s.date === session?.date
+        );
+        if (foundSession) {
+          session = foundSession;
+        }
+      }
+    }
+
     if (session.selected! > 0) {
       this.cartService.removeSession(eventInfo.event.id, session.date);
     }
